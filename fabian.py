@@ -4,9 +4,11 @@ import pickle
 import numpy as np
 
 app = Flask(__name__)
+app.config.from_object('fabian.cfg')
+app.config.from_envvar('FABIAN_SETTINGS')
 api = Api(app)
 
-with open('weighted-pipe.pkl','rb') as f:
+with open(app.config['CLASSIFIER'],'rb') as f:
     clf = pickle.load(f)
 
 class Difficulty(Resource):
@@ -19,4 +21,4 @@ class Difficulty(Resource):
 api.add_resource(Difficulty, '/difficulty/')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=app.config['DEBUG'])
